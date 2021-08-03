@@ -13,54 +13,91 @@
               </div>
               <form @submit.prevent="validateForm">
                 <div class="form-fields">
-                    <input
-                    class="field"
-                    type="text"
-                    placeholder="First Name"
-                    v-model.trim="form.firstName"
-                    v-on:keyup="validarCampoFirstName"
-                    :class="validations.firstName"
-                    >
-                    <input
-                    class="field"
-                    type="text"
-                    placeholder="Last Name"
-                    v-model.trim="form.lastName"
-                    v-on:keyup="validarCampoLastName"
-                    :class="validations.lastName"
-                    >
-                    <input
-                    class="field"
-                    type="text"
-                    placeholder="Email"
-                    v-model.trim="form.email"
-                    v-on:keyup="validarCampoEmail"
-                    :class="validations.email"
-                    >
-                    <input
-                    class="field"
-                    type="text"
-                    placeholder="Telephone Number"
-                    v-model.trim="form.telephoneNumber"
-                    v-on:keyup="validarCampoTelephoneNumber"
-                    :class="validations.telephoneNumber"
-                    >
-                    <input
-                    class="field"
-                    type="text"
-                    placeholder="Subject"
-                    v-model.trim="form.subject"
-                    v-on:keyup="validarCampoSubject"
-                    :class="validations.subject"
-                    >
-                    <textarea
-                    class="field text-area"
-                    cols="30"
-                    rows="10"
-                    placeholder="Message"
-                    v-model.trim="form.message"
-                    v-on:keyup="validarCampoMessage"
-                    :class="validations.message"></textarea>
+                    <div class="field-icon">
+                       <input
+                        class="field"
+                        type="text"
+                        placeholder="First Name"
+                        v-model.trim="form.firstName"
+                        v-on:keyup="validarCampoFirstName"
+                        :class="validations.firstName"
+                        >
+                        <box-icon
+                        :name='icons[0].name'
+                        :color = 'icons[0].color'
+                        size="xs" ></box-icon>
+                   </div>
+                   <div class="field-icon">
+                        <input
+                        class="field"
+                        type="text"
+                        placeholder="Last Name"
+                        v-model.trim="form.lastName"
+                        v-on:keyup="validarCampoLastName"
+                        :class="validations.lastName"
+                        >
+                        <box-icon
+                        :name='icons[1].name'
+                        :color = 'icons[1].color'
+                        size="xs" ></box-icon>
+                   </div>
+                   <div class="field-icon">
+                        <input
+                        class="field"
+                        type="text"
+                        placeholder="Email"
+                        v-model.trim="form.email"
+                        v-on:keyup="validarCampoEmail"
+                        :class="validations.email"
+                        >
+                        <box-icon
+                        :name='icons[2].name'
+                        :color = 'icons[2].color'
+                        size="xs" ></box-icon>
+                   </div>
+                   <div class="field-icon">
+                       <input
+                        class="field"
+                        type="text"
+                        placeholder="Telephone Number"
+                        v-model.trim="form.telephoneNumber"
+                        v-on:keyup="validarCampoTelephoneNumber"
+                        :class="validations.telephoneNumber"
+                        >
+                        <box-icon
+                        :name='icons[3].name'
+                        :color = 'icons[3].color'
+                        size="xs" ></box-icon>
+                   </div>
+                    <div class="field-icon">
+                        <input
+                        class="field"
+                        type="text"
+                        placeholder="Subject"
+                        v-model.trim="form.subject"
+                        v-on:keyup="validarCampoSubject"
+                        :class="validations.subject"
+                        >
+                        <box-icon
+                        :name='icons[4].name'
+                        :color = 'icons[4].color'
+                        size="xs" ></box-icon>
+                    </div>
+                    <div class="field-icon">
+                        <textarea
+                        class="field text-area"
+                        cols="30"
+                        rows="10"
+                        placeholder="Message"
+                        v-model.trim="form.message"
+                        v-on:keyup="validarCampoMessage"
+                        :class="validations.message"></textarea>
+                        <box-icon
+                        :name='icons[5].name'
+                        :color = 'icons[5].color'
+                        size="xs" ></box-icon>
+                    </div>
+                    
                 </div>
               <button class="btn" :disabled="blockBtn" :class="opacityBtn">Send</button>
               </form>
@@ -70,7 +107,6 @@
           <p>&copy;{{year}} Example Form Validation in VueJs | Design by Enrique Velasco</p>
       </footer>
   </div>
-  {{ form }}
 </template>
 
 <script>
@@ -79,6 +115,8 @@ import animate__backInDown from 'animate.css'
 import animate__backInUp from 'animate.css'
 
 import Swal from 'sweetalert2'
+import 'boxicons'
+
 
 export default {
 
@@ -105,7 +143,15 @@ export default {
                 telephoneNumber: '',
                 subject: '',
                 message: ''
-            }
+            },
+            icons: [
+                {name: '', color: ''},
+                {name: '', color: ''},
+                {name: '', color: ''},
+                {name: '', color: ''},
+                {name: '', color: ''},
+                {name: '', color: ''},
+            ]
 
         }
     },
@@ -118,45 +164,35 @@ export default {
         opacityBtn() {
 
             const { firstName, lastName, email, telephoneNumber, subject, message } = this.validations;
-            return firstName === 'error' || firstName === '' ||
-                    lastName === 'error' || lastName === '' ||
-                    email === 'error' || email === '' ||
-                    telephoneNumber === 'error' || telephoneNumber === '' ||
-                    subject === 'error' || subject === '' ||
-                    message === 'error' || message === '' ? 'btn-block' : 'btn-no-block'
+            const arrayValidations = [firstName, lastName, email, telephoneNumber, subject, message ];
+
+            //Validar campo a campo
+            let isValid;
+            isValid = arrayValidations.some( item => item === 'error' || item === "");
+            return isValid ? 'btn-block' : 'btn-no-block'
         },
        
         
          
     },
     methods: {
-        // validateForm() {
-        //     const { firstName, lastName, email, telephoneNumber, subject, message } = this.form;
-        //     console.log(firstName, lastName, email, telephoneNumber, subject, message);
-
-        //     //Creamos el objeto de validación
-        //     const regex = {
-        //         email: /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i,
-
-        //     }
-
-        //     if (firstName.length > 3 || firstName.length > 3) {
-        //         this.flag = true;
-        //     } else if (regex.email.test(email)) {
-        //         this.flag = true;
-        //     } else if (telephoneNumber.length === 10) {
-        //         this.flag = true;
-        //     } else if(subject === )
+        validateForm() {
+            
              
-        // }
+        },
         validarCampoFirstName() {
 
             const { firstName } = this.form;
             
             if( firstName.length < 3) {
                 this.validations.firstName = 'error';
+                this.icons[0].name = 'x';
+                this.icons[0].color = 'red';
+
             } else {
                 this.validations.firstName = 'success';
+                this.icons[0].name = 'check';
+                this.icons[0].color = 'green';
             }
         },
         validarCampoLastName() {
@@ -165,8 +201,12 @@ export default {
             
             if( lastName.length < 3) {
                 this.validations.lastName = 'error';
+                this.icons[1].name = 'x';
+                this.icons[1].color = 'red';
             } else {
                 this.validations.lastName = 'success';
+                this.icons[1].name = 'check';
+                this.icons[1].color = 'green';
             }
         },
         validarCampoEmail() {
@@ -175,9 +215,13 @@ export default {
             const regex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
             
             if( regex.test(email) ) {
-                this.validations.email = 'error';
-            } else {
                 this.validations.email = 'success';
+                this.icons[2].name = 'check';
+                this.icons[2].color = 'green';
+            } else {
+                this.validations.email = 'error';
+                this.icons[2].name = 'x';
+                this.icons[2].color = 'red';
             }
         },
         validarCampoTelephoneNumber() {
@@ -186,8 +230,12 @@ export default {
             
             if( telephoneNumber.length !== 10) {
                 this.validations.telephoneNumber = 'error';
+                this.icons[3].name = 'x';
+                this.icons[3].color = 'red';
             } else {
                 this.validations.telephoneNumber = 'success';
+                this.icons[3].name = 'check';
+                this.icons[3].color = 'green';
             }
         },
         validarCampoSubject() {
@@ -196,8 +244,12 @@ export default {
             
             if( subject.length < 3) {
                 this.validations.subject = 'error';
+                this.icons[4].name = 'x';
+                this.icons[4].color = 'red';
             } else {
                 this.validations.subject = 'success';
+                this.icons[4].name = 'check';
+                this.icons[4].color = 'green';
             }
         },
         validarCampoMessage() {
@@ -206,8 +258,12 @@ export default {
             
             if( message.length < 3) {
                 this.validations.message = 'error';
+                this.icons[5].name = 'x';
+                this.icons[5].color = 'red';
             } else {
                 this.validations.message = 'success';
+                this.icons[5].name = 'check';
+                this.icons[5].color = 'green';
             }
         },
         
@@ -288,12 +344,16 @@ form {
 .form-fields {
 
     width: 100%;
-    margin-bottom: 0px;
+}
+.field-icon {
 
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
 }
 .field {
 
-    width: 100%;  
+    width: 95%;  
     margin-bottom: 10px;
     height: 40px;
     padding: 10px 15px;
@@ -303,9 +363,14 @@ form {
     font-family: 'Hind Siliguri', sans-serif;
     
 }
+.field-icon:last-child {
+
+    height: 120px;
+    margin-bottom: 25px;
+}
 .text-area {
     
-    height: 120px;
+    height: 100%;
 }
 #form-footer {
 
@@ -325,8 +390,8 @@ form {
 
 .field:hover {
 
-    border-color: #0AAC9D;
-    color: #0AAC9D;
+    border-color: rgb(200, 206, 204 );
+    color: #000;
 }
 /* .btn:hover {
 
@@ -419,11 +484,14 @@ form {
 /* errors */
 .error {
     
-    border: 3px solid red;
+    border: 1px solid rgb(248, 153, 163);
+    box-shadow: 0px 0px 2px 2px rgba(241, 61, 80, 0.3);
+    
 }
 .success {
     
-    border: 3px solid green;
+    border: 1px solid rgb(190, 240, 130);
+    box-shadow: 0px 0px 2px 2px rgba(139, 240, 19, 0.3);
 }
 
 </style>
