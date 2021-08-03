@@ -11,40 +11,58 @@
                <div class="form-legend">
                   <p>Fillout the form bellow to know more</p>
               </div>
-              <form>
+              <form @submit.prevent="validateForm">
                 <div class="form-fields">
                     <input
                     class="field"
                     type="text"
                     placeholder="First Name"
+                    v-model.trim="form.firstName"
+                    v-on:keyup="validarCampoFirstName"
+                    :class="validations.firstName"
                     >
                     <input
                     class="field"
                     type="text"
                     placeholder="Last Name"
+                    v-model.trim="form.lastName"
+                    v-on:keyup="validarCampoLastName"
+                    :class="validations.lastName"
                     >
                     <input
                     class="field"
                     type="text"
                     placeholder="Email"
+                    v-model.trim="form.email"
+                    v-on:keyup="validarCampoEmail"
+                    :class="validations.email"
                     >
                     <input
                     class="field"
                     type="text"
                     placeholder="Telephone Number"
+                    v-model.trim="form.telephoneNumber"
+                    v-on:keyup="validarCampoTelephoneNumber"
+                    :class="validations.telephoneNumber"
                     >
                     <input
                     class="field"
                     type="text"
                     placeholder="Subject"
+                    v-model.trim="form.subject"
+                    v-on:keyup="validarCampoSubject"
+                    :class="validations.subject"
                     >
                     <textarea
                     class="field text-area"
                     cols="30"
                     rows="10"
-                    placeholder="Message"></textarea>
+                    placeholder="Message"
+                    v-model.trim="form.message"
+                    v-on:keyup="validarCampoMessage"
+                    :class="validations.message"></textarea>
                 </div>
-              <button class="btn">Send</button>
+              <button class="btn" :disabled="blockBtn" :class="opacityBtn">Send</button>
               </form>
           </div>
       </div>
@@ -52,12 +70,15 @@
           <p>&copy;{{year}} Example Form Validation in VueJs | Design by Enrique Velasco</p>
       </footer>
   </div>
+  {{ form }}
 </template>
 
 <script>
 import animate__backInLeft from 'animate.css'
 import animate__backInDown from 'animate.css'
 import animate__backInUp from 'animate.css'
+
+import Swal from 'sweetalert2'
 
 export default {
 
@@ -68,14 +89,128 @@ export default {
                 "animate__animated animate__backInLeft",
                 "animate__animated animate__backInDown",
                 "animate__animated animate__backInUp"
-            ]
+            ],
+            form: {
+                firstName: '',
+                lastName: '',
+                email: '',
+                telephoneNumber: '',
+                subject: '',
+                message: ''
+            },
+            validations: {
+                firstName: '',
+                lastName: '',
+                email: '',
+                telephoneNumber: '',
+                subject: '',
+                message: ''
+            }
 
         }
     },
     computed: {
+        blockBtn() {
+
+            const { firstName, lastName, email, telephoneNumber, subject, message } = this.form;
+            return !firstName || !lastName || !email || !telephoneNumber || !subject || !message 
+        },
+        opacityBtn() {
+
+            const { firstName, lastName, email, telephoneNumber, subject, message } = this.validations;
+            return firstName === 'error' || firstName === '' ||
+                    lastName === 'error' || lastName === '' ||
+                    email === 'error' || email === '' ||
+                    telephoneNumber === 'error' || telephoneNumber === '' ||
+                    subject === 'error' || subject === '' ||
+                    message === 'error' || message === '' ? 'btn-block' : 'btn-no-block'
+        },
+       
         
+         
     },
     methods: {
+        // validateForm() {
+        //     const { firstName, lastName, email, telephoneNumber, subject, message } = this.form;
+        //     console.log(firstName, lastName, email, telephoneNumber, subject, message);
+
+        //     //Creamos el objeto de validación
+        //     const regex = {
+        //         email: /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i,
+
+        //     }
+
+        //     if (firstName.length > 3 || firstName.length > 3) {
+        //         this.flag = true;
+        //     } else if (regex.email.test(email)) {
+        //         this.flag = true;
+        //     } else if (telephoneNumber.length === 10) {
+        //         this.flag = true;
+        //     } else if(subject === )
+             
+        // }
+        validarCampoFirstName() {
+
+            const { firstName } = this.form;
+            
+            if( firstName.length < 3) {
+                this.validations.firstName = 'error';
+            } else {
+                this.validations.firstName = 'success';
+            }
+        },
+        validarCampoLastName() {
+
+            const { lastName } = this.form;
+            
+            if( lastName.length < 3) {
+                this.validations.lastName = 'error';
+            } else {
+                this.validations.lastName = 'success';
+            }
+        },
+        validarCampoEmail() {
+
+            const { email } = this.form;
+            const regex = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+            
+            if( regex.test(email) ) {
+                this.validations.email = 'error';
+            } else {
+                this.validations.email = 'success';
+            }
+        },
+        validarCampoTelephoneNumber() {
+
+            const { telephoneNumber } = this.form;
+            
+            if( telephoneNumber.length !== 10) {
+                this.validations.telephoneNumber = 'error';
+            } else {
+                this.validations.telephoneNumber = 'success';
+            }
+        },
+        validarCampoSubject() {
+
+            const { subject } = this.form;
+            
+            if( subject.length < 3) {
+                this.validations.subject = 'error';
+            } else {
+                this.validations.subject = 'success';
+            }
+        },
+        validarCampoMessage() {
+
+            const { message } = this.form;
+            
+            if( message.length < 3) {
+                this.validations.message = 'error';
+            } else {
+                this.validations.message = 'success';
+            }
+        },
+        
         
     },
     created() {
@@ -185,7 +320,6 @@ form {
     border: transparent;
     border-radius: 40px;
     font-size: 15px;
-    cursor: pointer;
     transition: 1s;
 }
 
@@ -194,10 +328,10 @@ form {
     border-color: #0AAC9D;
     color: #0AAC9D;
 }
-.btn:hover {
+/* .btn:hover {
 
     transform: scale(1.1);
-}
+} */
 
 @media screen and (max-width: 1024px) {
 
@@ -272,4 +406,24 @@ form {
         margin-bottom: 20px;
     }
 }
+
+.btn-block {
+    opacity: 0.2;
+    cursor: none;
+}
+.btn-no-block {
+    opacity: 1;
+    cursor: pointer;
+}
+
+/* errors */
+.error {
+    
+    border: 3px solid red;
+}
+.success {
+    
+    border: 3px solid green;
+}
+
 </style>
